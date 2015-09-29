@@ -10,7 +10,7 @@ import ckan.plugins.toolkit as toolkit
 
 
 class SimpleSSOPlugin(plugins.SingletonPlugin):
-    '''A CKAN plugin that enables logging into CKAN using Mozilla Persona.
+    '''A CKAN plugin that enables SSO using a simple header parameter.
 
     '''
     plugins.implements(plugins.IConfigurer)
@@ -28,22 +28,20 @@ class SimpleSSOPlugin(plugins.SingletonPlugin):
         pass
 
     def identify(self):
-        '''Identify which user (if any) is logged-in via simple SSO header.
+        '''Identify which user (if any) is logged in via simple SSO header.
 
-        If a logged-in user is found, set toolkit.c.user to be their user name.
+        If a logged in user is found, set toolkit.c.user to be their user name.
 
         '''
 
         if self.header_parameter in toolkit.request.headers:
-            userid = toolkit.request.headers.get(self.header_parameter)
+            userid = toolkit.request.headers.get(self.header_parameter).lower()
             email = userid + "@" + self.email_domain
-            # TODO: add check for user existing in CKAN
-            # TODO: Look up against username - email can be changed
             user = get_user_by_username(userid)
 
             if not user:
-                # A user with this email address doesn't yet exist in CKAN,
-                # so create one.
+                # A user with this username doesn't yet exist in CKAN
+                # - so create one.
                 user = toolkit.get_action('user_create')(
                     context={'ignore_auth': True},
                     data_dict={'email': email,
