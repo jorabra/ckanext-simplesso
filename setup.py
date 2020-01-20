@@ -15,7 +15,7 @@ setup(
     author='Jørgen Abrahamsen',
     author_email='jorgen.abrahamsen@gmail.com',
     url='jorgenabrahamsen.com',
-    license='',
+    license='MIT',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     namespace_packages=['ckanext', 'ckanext.simplesso'],
     include_package_data=True,
